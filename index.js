@@ -10,6 +10,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false })); // Required for Twilio IVR
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/parkpal')
@@ -22,6 +23,7 @@ app.use('/api/vehicles', require('./routes/vehicle.routes'));
 app.use('/api/users', require('./routes/user.routes'));
 app.use('/api/tickets', require('./routes/ticket.routes'));
 app.use('/api/notifications', require('./routes/notification.routes'));
+app.use('/ivr', require('./routes/ivr.routes')); // IVR routes
 
 // TODO: Implement these routes later
 // app.use('/api/qr', require('./routes/qr.routes'));
