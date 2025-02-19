@@ -1,0 +1,37 @@
+{
+  "name": "parkpal",
+  "version": "1.0.0",
+  "description": "Backend API for ParkPal mobile app with vehicle management, parking tickets, and QR code features",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "lint": "eslint .",
+    "test": "jest"
+  },
+  "keywords": [
+    "parking",
+    "vehicle-management",
+    "qr-code",
+    "tickets",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0"
+  }
+}
