@@ -26,12 +26,15 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
+    "list": "^2.0.19",
     "mongoose": "^8.9.5",
-    "qrcode": "^1.5.3"
+    "npm": "^11.1.0",
+    "qrcode": "^1.5.4",
+    "twilio": "^5.4.4"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
     "eslint": "^8.56.0",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9"
   }
 }

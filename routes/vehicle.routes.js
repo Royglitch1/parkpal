@@ -3,8 +3,6 @@ const router = express.Router();
 const { authenticate } = require('../middleware/auth');
 const Vehicle = require('../models/vehicle.model');
 const User = require('../models/user.model');
-const QRCode = require('qrcode');
-const crypto = require('crypto');
 
 // Register new vehicle
 router.post('/', authenticate, async (req, res) => {
@@ -18,25 +16,6 @@ router.post('/', authenticate, async (req, res) => {
       return res.status(400).json({ message: 'Vehicle already registered' });
     }
 
-    function generateUniqueThreeDigitCode() {
-      // In production, you might check against a database to ensure uniqueness
-      return Math.floor(100 + Math.random() * 900).toString();
-    }
-    const threeDigitCode = generateUniqueThreeDigitCode();
-    // Generate unique identifier for QR code
-    const uniqueId = crypto.randomBytes(32).toString('hex');
-    
-    // Generate QR code with vehicle data
-    const qrCodeData = JSON.stringify({
-      id: uniqueId,
-      registrationNumber,
-      vehicleType,
-      threeDigitCode,
-      timestamp: Date.now()
-    });
-    
-    const qrCode = await QRCode.toDataURL(qrCodeData);
-
     const vehicle = new Vehicle({
       owner: userId,
       registrationNumber: registrationNumber.toUpperCase(),
@@ -44,8 +23,7 @@ router.post('/', authenticate, async (req, res) => {
       vehicleType,
       make,
       model,
-      color,
-      qrCode
+      color
     });
 
     await vehicle.save();
@@ -94,38 +72,6 @@ router.get('/:id', authenticate, async (req, res) => {
     res.json({ vehicle });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching vehicle', error: error.message });
-  }
-});
-
-// Get QR code for vehicle
-router.get('/:id/qr', authenticate, async (req, res) => {
-  try {
-    const vehicle = await Vehicle.findOne({
-      _id: req.params.id,
-      owner: req.user.userId
-    });
-
-    if (!vehicle) {
-      return res.status(404).json({ message: 'Vehicle not found' });
-    }
-
-    // Generate QR code with vehicle data
-    const qrCodeData = JSON.stringify({
-      id: vehicle.qrCode,
-      registrationNumber: vehicle.registrationNumber,
-      vehicleType: vehicle.vehicleType,
-      timestamp: Date.now()
-    });
-    
-    const qrCode = await QRCode.toDataURL(qrCodeData);
-
-    res.json({
-      qrCode,
-      vehicleId: vehicle._id,
-      registrationNumber: vehicle.registrationNumber
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Error generating QR code', error: error.message });
   }
 });
 

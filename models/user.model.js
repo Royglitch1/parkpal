@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
+  qrCode: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
   vehicles: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Vehicle'

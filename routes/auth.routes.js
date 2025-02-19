@@ -3,6 +3,8 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 const { authenticate } = require('../middleware/auth');
+const QRCode = require('qrcode');
+const crypto = require('crypto');
 
 // Register new user
 router.post('/register', async (req, res) => {
@@ -53,12 +55,25 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Create new user
+    // Generate QR code
+    const uniqueId = crypto.randomBytes(32).toString('hex');
+    const threeDigitCode = Math.floor(100 + Math.random() * 900).toString();
+    
+    const qrCodeData = JSON.stringify({
+      id: uniqueId,
+      code: threeDigitCode,
+      timestamp: Date.now()
+    });
+    
+    const qrCodeImage = await QRCode.toDataURL(qrCodeData);
+
+    // Create new user with QR code
     const newUser = new User({
       email,
       password,
       name,
-      mobileNumber
+      mobileNumber,
+      qrCode: qrCodeImage
     });
 
     try {
@@ -102,7 +117,8 @@ router.post('/register', async (req, res) => {
         email: newUser.email,
         name: newUser.name,
         mobileNumber: newUser.mobileNumber,
-        role: newUser.role
+        role: newUser.role,
+        qrCode: newUser.qrCode
       }
     });
   } catch (error) {
@@ -193,7 +209,8 @@ router.post('/login', async (req, res) => {
         email: user.email,
         name: user.name,
         mobileNumber: user.mobileNumber,
-        role: user.role
+        role: user.role,
+        qrCode: user.qrCode
       }
     });
   } catch (error) {
@@ -266,7 +283,8 @@ router.put('/profile', authenticate, async (req, res) => {
         email: user.email,
         name: user.name,
         mobileNumber: user.mobileNumber,
-        role: user.role
+        role: user.role,
+        qrCode: user.qrCode
       }
     });
   } catch (error) {

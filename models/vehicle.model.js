@@ -37,10 +37,6 @@ const vehicleSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
-  qrCode: {
-    type: String,
-    unique: true
-  },
   tickets: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Ticket'
